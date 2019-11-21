@@ -14,7 +14,7 @@ export default class Express {
   static connect() {
     let app = express();
     app.use(cors());
-    app.use(cookieParser())
+    app.use(cookieParser());
     app.options("*", cors());
       
     app.use(bodyParser.json());

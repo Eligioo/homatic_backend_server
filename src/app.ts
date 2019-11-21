@@ -13,7 +13,7 @@ Log.info("Starting Homatic backend server");
     // Load .env file
     const conf = dotenv.config();
     if (conf.error)
-      throw Error('Unable to load .env file')
+      throw Error("Unable to load .env file");
     else
       Log.info("Loaded .env file");
 		
