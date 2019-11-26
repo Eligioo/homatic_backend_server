@@ -50,43 +50,43 @@ router.post("/user/login", ExpressValidator.UserLoginRoute, async (req:express.R
   }
 });
 
-router.post('/user/session', async (req, res) => {
+router.post("/user/session", async (req, res) => {
   try {
     if(req.body.key) {
-      const session = await Session.findOne({key: req.body.key})
+      const session = await Session.findOne({key: req.body.key});
       if(session && session.active && (req.headers["x-forwarded-for"] || req.connection.remoteAddress) === session.ip_address) {
-        res.json("OK")
-        session.last_activity = new Date(Date.now())
-        session.save()
-        return
+        res.json("OK");
+        session.last_activity = new Date(Date.now());
+        session.save();
+        return;
       }
       else {
-        throw Error('No valid session in database')
+        throw Error("No valid session in database");
       }
     }
     else {
-      throw Error('Session not in request')
+      throw Error("Session not in request");
     }
   } catch (error) {
-    Log.error(`Invalid user session: ${error.message}`)
-    return res.json({error: {msg: "Invalid user session"}})
+    Log.error(`Invalid user session: ${error.message}`);
+    return res.json({error: {msg: "Invalid user session"}});
   }
-})
+});
 
-router.post('/user/logout', async (req, res) => {
+router.post("/user/logout", async (req, res) => {
   if(req.body.key) {
     try {
-      const session = await Session.findOne({key: req.body.key})
+      const session = await Session.findOne({key: req.body.key});
       if(session && session.active && (req.headers["x-forwarded-for"] || req.connection.remoteAddress) === session.ip_address) {
-        res.json("OK")
-        session.active = false
-        session.last_activity = new Date(Date.now())
-        session.save()
+        res.json("OK");
+        session.active = false;
+        session.last_activity = new Date(Date.now());
+        session.save();
       }  
     } catch (error) {
-      res.json("OK")
+      res.json("OK");
     }  
   }
-})
+});
 
 export default router;
