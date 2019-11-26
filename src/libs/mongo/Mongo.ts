@@ -12,7 +12,8 @@ export default class Mongo {
       Log.info("Connecting to database");
       await mongoose.connect(uri, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
       });
       Log.info("Connected to database");
     } catch (error) {
