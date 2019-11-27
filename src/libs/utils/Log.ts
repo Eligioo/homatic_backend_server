@@ -7,7 +7,7 @@ const error = chalk.redBright;
 const info = chalk.blueBright;
 const warning = chalk.keyword("orange");
 
-export default class Log {
+export default class LogUtils {
   static info(message:any) {
     log(info(`[${new Date().toLocaleString()}] INFO:   ${message}`));
   }
