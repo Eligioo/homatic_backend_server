@@ -68,7 +68,7 @@ router.post("/user/session", async (req, res) => {
       throw Error("Session not in request");
     }
   } catch (error) {
-    Log.error(`Invalid user session: ${error.message}`);
+    Log.warn(`Invalid user session: ${error.message}`);
     return res.json({error: {msg: "Invalid user session"}});
   }
 });
