@@ -4,7 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import Log from "../utils/Log";
 
-import v1Router from "./api/v1";
+import v1Router from "./api/v1/v1";
 
 export default class Express {
   
