@@ -2,6 +2,7 @@ import { isMAC } from "getmac";
 
 // eslint-disable-next-line no-unused-vars
 import Hub, { IHubModel } from "../mongo/models/Hub";
+import LogUtils from "./Log";
 
 export default class HubUtils {
   /**
@@ -17,10 +18,15 @@ export default class HubUtils {
    * @param mac_address MAC address
    */
   public static async isIdentified(mac_address:string): Promise<IHubModel | undefined> {
-    const hub = await Hub.findOne({mac_address: mac_address});
-    if(this.isValidMAC(mac_address) && hub) {
-      return hub;
+    try {
+      const hub = await Hub.findOne({mac_address: mac_address});
+      if(this.isValidMAC(mac_address) && hub) {
+        return hub;
+      }
+      return undefined;
+    } catch (error) {
+      LogUtils.error(error.message)
+      return undefined;
     }
-    return undefined;
   }
 }

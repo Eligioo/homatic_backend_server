@@ -52,22 +52,27 @@ router.post("/instance/identify", ExpressValidator.HubIdentifyRoute, async (req:
 });
 
 router.post("/instance/ping", async (req, res) => {
-  // MAC address not provided
-  if(!req.body.mac_address) {
-    Log.warn("Instance tried to ping without providing a MAC address");
-    return res.json({error: [{msg: "Geen identifier meegestuurd."}]});
-  }
-  
-  const hub = await HubUtils.isIdentified(req.body.mac_address);
-  // Hub identified
-  if(hub) {
-    hub.last_ping = new Date();
-    hub.save();
-    return res.json("OK");
-  }
-  else {
-    Log.warn(`Instance ${req.body.mac_address} tried to ping but isn't identified`);
-    return res.json({error: [{msg: "Hub is niet geïdentificeerd."}]});
+  try {
+    // MAC address not provided
+    if(!req.body.mac_address) {
+      Log.warn("Instance tried to ping without providing a MAC address");
+      return res.json({error: [{msg: "Geen identifier meegestuurd."}]});
+    }
+    
+    const hub = await HubUtils.isIdentified(req.body.mac_address);
+    // Hub identified
+    if(hub) {
+      hub.last_ping = new Date();
+      hub.save();
+      return res.json("OK");
+    }
+    else {
+      Log.warn(`Instance ${req.body.mac_address} tried to ping but isn't identified`);
+      return res.json({error: [{msg: "Hub is niet geïdentificeerd."}]});
+    }
+  } catch (error) {
+    Log.error(error.message);
+    return res.json({ error: [{msg: "Fout opgetreden tijdens de pingen."}] });
   }
 });
 
