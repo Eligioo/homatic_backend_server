@@ -58,11 +58,11 @@ router.post("/instance/ping", async (req, res) => {
     return res.json({error: [{msg: "Geen identifier meegestuurd."}]});
   }
   
-  const hub = await HubUtils.isIdentified(req.body.mac_address)
+  const hub = await HubUtils.isIdentified(req.body.mac_address);
   // Hub identified
   if(hub) {
-    hub.last_ping = new Date()
-    hub.save()
+    hub.last_ping = new Date();
+    hub.save();
     return res.json("OK");
   }
   else {
