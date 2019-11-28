@@ -29,4 +29,14 @@ export default class HubUtils {
       return undefined;
     }
   }
+
+  /**
+   * Checks whether the hub as pinged within the last 10 seconds
+   * @param hub An Hub instance
+   */
+  public static isConnected(hub: IHubModel): boolean {
+    const now = new Date(Date.now());
+    now.setSeconds(now.getSeconds() - 10);
+    return hub.last_ping >= now;
+  }
 }

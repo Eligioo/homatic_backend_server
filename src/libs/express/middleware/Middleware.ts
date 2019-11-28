@@ -7,7 +7,7 @@ class PortalMiddleware {
   public static async isValidSession(req:express.Request, res:express.Response, next:express.NextFunction) {
     try {
       if(!req.body.key) {
-        res.json({error: {msg: "Geen key meegestuurd"}});
+        res.json({error: [{msg: "Geen key meegestuurd"}]});
         throw Error("Session not in request");
       }
   
@@ -17,7 +17,7 @@ class PortalMiddleware {
         return next();
       }
       else {
-        res.json({error: {msg: "Ongeldige sessie"}});
+        res.json({error: [{msg: "Ongeldige sessie"}]});
         throw Error("No valid session in database");
       }
     } catch (error) {

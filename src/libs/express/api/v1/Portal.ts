@@ -9,6 +9,9 @@ import ExpressValidator from "../../Validator";
 import Log from "../../../utils/Log";
 import Random from "../../../utils/Random";
 import bcrypt from "bcrypt";
+import HubUtils from "../../../utils/Hub";
+// eslint-disable-next-line no-unused-vars
+import Hub, { IHubModel } from "../../../mongo/models/Hub";
 
 
 const router = express.Router();
@@ -58,7 +61,7 @@ router.post("/user/session", Middleware.Portal.isValidSession, (req, res) => {
   }
   catch (error) {
     Log.error(`Issue updating session: ${error.message}`);
-    return res.json({error: {msg: "Ongeldige gebruikerssessie"}});
+    return res.json({error: [{msg: "Ongeldige gebruikerssessie"}]});
   }
 });
 
@@ -75,6 +78,23 @@ router.post("/user/logout", Middleware.Portal.isValidSession, (req, res) => {
     Log.error(`Issue loggin out: ${error.message}`);
     return res.json("OK");
   }  
+});
+
+router.post("/hubs", Middleware.Portal.isValidSession, async (req, res) => {
+  try {
+    const hubs = await Hub.find();
+    let online:IHubModel[] = [],
+      offline:IHubModel[] = [];
+    hubs.forEach(h => HubUtils.isConnected(h) ? online.push(h) : offline.push(h));
+
+    return res.json({
+      online,
+      offline
+    });
+  } catch (error) {
+    Log.error(error.message);
+    return res.json({error: [{msg: "Kan sessie niet verifieren"}]});
+  }
 });
 
 export default router;
