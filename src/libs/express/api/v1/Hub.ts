@@ -56,7 +56,10 @@ router.post("/instance/ping", async (req, res) => {
     // MAC address not provided
     if(!req.body.mac_address) {
       Log.warn("Instance tried to ping without providing a MAC address");
-      return res.json({error: [{msg: "Geen identifier meegestuurd."}]});
+      return res.json({
+        error: [{msg: "No MAC address included"}],
+        code: 1000
+      });
     }
     
     const hub = await HubUtils.isIdentified(req.body.mac_address);
@@ -68,11 +71,14 @@ router.post("/instance/ping", async (req, res) => {
     }
     else {
       Log.warn(`Instance ${req.body.mac_address} tried to ping but isn't identified`);
-      return res.json({error: [{msg: "Hub is niet geïdentificeerd."}]});
+      return res.json({
+        error: [{msg: "Hub is not identified"}],
+        code: 1001
+      });
     }
   } catch (error) {
     Log.error(error.message);
-    return res.json({ error: [{msg: "Fout opgetreden tijdens de pingen."}] });
+    return res.json({ error: [{msg: "An error occured while pinging the hub."}] });
   }
 });
 
