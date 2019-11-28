@@ -25,7 +25,7 @@ export default class HubUtils {
       }
       return undefined;
     } catch (error) {
-      LogUtils.error(error.message)
+      LogUtils.error(error.message);
       return undefined;
     }
   }

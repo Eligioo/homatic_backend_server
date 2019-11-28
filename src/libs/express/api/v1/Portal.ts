@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import Session from "../../../mongo/models/Session";
 import User from "../../../mongo/models/User";
+import Middleware from "../../middleware/Middleware";
 
 import ExpressValidator from "../../Validator";
 import Log from "../../../utils/Log";
@@ -47,42 +48,33 @@ router.post("/user/login", ExpressValidator.UserLoginRoute, async (req:express.R
   }
 });
 
-router.post("/user/session", async (req, res) => {
+router.post("/user/session", Middleware.Portal.isValidSession, (req, res) => {
   try {
-    if(req.body.key) {
-      const session = await Session.findOne({key: req.body.key});
-      if(session && session.active && (req.headers["x-forwarded-for"] || req.connection.remoteAddress) === session.ip_address) {
-        session.last_activity = new Date(Date.now());
-        session.save();
-        return res.json("OK");
-      }
-      else {
-        throw Error("No valid session in database");
-      }
+    if(res.locals.session) {
+      res.locals.session.last_activity = new Date(Date.now());
+      res.locals.session.save();
+      return res.json("OK");
     }
-    else {
-      throw Error("Session not in request");
-    }
-  } catch (error) {
-    Log.warn(`Invalid user session: ${error.message}`);
+  }
+  catch (error) {
+    Log.error(`Issue updating session: ${error.message}`);
     return res.json({error: {msg: "Ongeldige gebruikerssessie"}});
   }
 });
 
-router.post("/user/logout", async (req, res) => {
-  if(req.body.key) {
-    try {
-      const session = await Session.findOne({key: req.body.key});
-      if(session && session.active && (req.headers["x-forwarded-for"] || req.connection.remoteAddress) === session.ip_address) {
-        session.active = false;
-        session.last_activity = new Date(Date.now());
-        session.save();
-        return res.json("OK");
-      }  
-    } catch (error) {
+router.post("/user/logout", Middleware.Portal.isValidSession, (req, res) => {
+  try {
+    if(res.locals.session) {
+      res.locals.active = false;
+      res.locals.last_activity = new Date(Date.now());
+      res.locals.save();
       return res.json("OK");
     }  
   }
+  catch (error) {
+    Log.error(`Issue loggin out: ${error.message}`);
+    return res.json("OK");
+  }  
 });
 
 export default router;
