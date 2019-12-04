@@ -53,11 +53,11 @@ router.post("/instance/identify", ExpressValidator.HubIdentifyRoute, async (req:
 
 router.post("/instance/ping", async (req, res) => {
   try {
-    // MAC address not provided
-    if(!req.body.mac_address) {
-      Log.warn("Instance tried to ping without providing a MAC address");
+    // MAC address or ha_connected not provided
+    if(!req.body.mac_address || !req.body.ha_connected) {
+      Log.warn("Instance tried to ping without providing a MAC address or ha_connected in body");
       return res.json({
-        error: [{msg: "No MAC address included"}],
+        error: [{msg: "No MAC address or ha_connected included"}],
         code: 1000
       });
     }
@@ -66,6 +66,7 @@ router.post("/instance/ping", async (req, res) => {
     // Hub identified
     if(hub) {
       hub.last_ping = new Date();
+      hub.ha_connected = req.body.ha_connected
       hub.save();
       return res.json("OK");
     }
