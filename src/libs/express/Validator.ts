@@ -21,7 +21,10 @@ export default class ExpressValidator {
       .not().isEmpty().withMessage("MAC address is vereist om te identificeren."),
     
     check("hub_code")
-      .not().isEmpty().withMessage("Hub code is vereist om te identificeren")
+      .not().isEmpty().withMessage("Hub code is vereist om te identificeren"),
+    
+    check("discovery_info")
+      .not().isEmpty().withMessage("Geen discovery informatie meegestuurd")
   ]
 
 }

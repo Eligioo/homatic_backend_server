@@ -35,7 +35,8 @@ router.post("/instance/identify", ExpressValidator.HubIdentifyRoute, async (req:
       Log.info(`New hub is identified: ${req.body.mac_address}`);
       hub = new Hub({
         mac_address: req.body.mac_address,
-        last_ping: Date.now()
+        last_ping: Date.now(),
+        discovery_info: req.body.discovery_info
       });
       hub.save();
       return res.json("OK");
