@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+// eslint-disable-next-line no-unused-vars
 import { IDiscoveryInfo } from "../../../types";
 
 export interface IHub {

@@ -67,7 +67,7 @@ router.post("/instance/ping", async (req, res) => {
     // Hub identified
     if(hub) {
       hub.last_ping = new Date();
-      hub.ha_connected = req.body.ha_connected
+      hub.ha_connected = req.body.ha_connected;
       hub.save();
       return res.json("OK");
     }
