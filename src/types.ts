@@ -7,3 +7,8 @@ export interface IDiscoveryInfo {
   requires_api_password: boolean;
   version: string;
 }
+
+export enum Weather {
+  SUNNY = "sunny",
+  RAINY = "rainy"
+}

@@ -97,4 +97,12 @@ router.post("/hubs", Middleware.Portal.isValidSession, async (req, res) => {
   }
 });
 
+router.post("/update-state/:id", Middleware.Portal.isValidSession, (req, res) => {
+  try {
+    res.json({});
+  } catch (error) {
+    
+  }
+});
+
 export default router;
